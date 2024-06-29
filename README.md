@@ -19,7 +19,7 @@ Cette application permet de gérer votre présence Rich Presence sur Discord de 
 
 ### Prérequis
 - Python 3.x
-- Modules requis : `tkinter`, `pypresence`, `ttkbootstrap`
+- Modules requis : `tk`, `pypresence`, `ttkbootstrap`
 
 ### Étapes d'installation
 1. Clonez ce dépôt GitHub :
