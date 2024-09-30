@@ -10,9 +10,9 @@ import sys
 import subprocess
 import winreg as reg
 
-CLIENT_ID = '1254879651671572560'  
-APP_NAME = 'Discord Rich Presence App'  
-REG_PATH = r"Software\Microsoft\Windows\CurrentVersion\Run"  
+CLIENT_ID = '1281631749348003932'  # ID de client fixe
+APP_NAME = 'Discord Rich Presence App'  # Nom de l'application pour le registre Windows
+REG_PATH = r"Software\Microsoft\Windows\CurrentVersion\Run"  # Chemin dans le registre pour le démarrage automatique
 
 class RichPresenceApp:
     def __init__(self, root):
@@ -27,22 +27,22 @@ class RichPresenceApp:
         self.button2_label = tk.StringVar()
         self.button2_url = tk.StringVar()
 
-        self.load_data()  
+        self.load_data()  # Charger les données enregistrées au démarrage de l'application
 
         root.title("Discord Rich Presence | By Mazpx & Kz0x._")
 
-        style = Style(theme='darkly')  
+        style = Style(theme='darkly')  # Utilisation du thème sombre 'darkly' de ttkbootstrap
         main_frame = ttk.Frame(root, padding="10", style="Dark.TFrame")
         main_frame.grid(row=0, column=0, sticky="nsew")
 
         def create_label_entry(frame, text, var):
-            label = ttk.Label(frame, text=text, style="White.TLabel")  
-            entry = ttk.Entry(frame, textvariable=var, width=40, style="Custom.TEntry")  
+            label = ttk.Label(frame, text=text, style="White.TLabel")  # Utilisation du style White.TLabel pour le texte blanc
+            entry = ttk.Entry(frame, textvariable=var, width=40, style="Custom.TEntry")  # Utilisation du style Custom.TEntry pour l'entrée de texte
             label.grid(row=len(frame.grid_slaves()) // 2, column=0, pady=5, sticky='w')
             entry.grid(row=len(frame.grid_slaves()) // 2, column=1, pady=5, padx=10, sticky='ew')
             return label, entry
 
-        
+        # Définition du style personnalisé pour les entrées de texte
         style.configure('Custom.TEntry', background='#303030', foreground='white', fieldbackground='#404040')
 
         create_label_entry(main_frame, "State ( Titre )", self.state)
@@ -71,25 +71,25 @@ class RichPresenceApp:
         self.clear_button = ttk.Button(button_frame, text="Effacer", command=self.clear_data, style="Dark.TButton")
         self.clear_button.pack(pady=10, padx=20, fill='x')
 
-        
+        # Ajout du bouton pour activer/désactiver le démarrage automatique
         self.autostart_var = tk.BooleanVar()
         self.autostart_var.set(self.is_autostart_enabled())
         self.autostart_checkbox = ttk.Checkbutton(button_frame, text="Démarrage automatique au démarrage de Windows", variable=self.autostart_var, command=self.toggle_autostart)
         self.autostart_checkbox.pack(pady=10, padx=20, fill='x')
 
-        root.grid_rowconfigure(0, weight=1)  
-        root.grid_columnconfigure(0, weight=1)  
+        root.grid_rowconfigure(0, weight=1)  # Permet au premier cadre de s'étendre avec la fenêtre
+        root.grid_columnconfigure(0, weight=1)  # Permet à la colonne principale de s'étendre avec la fenêtre
 
         self.rpc = None
         self.update_thread = None
         self.running = False
 
-        
+        # Vérifier et démarrer automatiquement la présence si des données sont enregistrées
         if self.is_data_saved():
             self.start_rich_presence_delayed()
 
     def start_rich_presence_delayed(self):
-        
+        # Attendre 3 secondes avant de démarrer la rich presence
         root.after(3000, self.start_rich_presence)
 
     def start_rich_presence(self):
@@ -129,7 +129,7 @@ class RichPresenceApp:
                 presence_data['buttons'] = buttons
 
             self.rpc.update(**presence_data)
-            time.sleep(15)  
+            time.sleep(15)  # Update every 15 seconds
 
     def stop_rich_presence(self):
         if self.running:
@@ -140,7 +140,7 @@ class RichPresenceApp:
             self.start_button.config(state=tk.NORMAL)
             self.stop_button.config(state=tk.DISABLED)
         else:
-            
+            # Afficher un message demandant à mettre la rich presence sur stop
             messagebox.showinfo("Information", "Veuillez mettre la Rich Presence sur stop pour fermer l'application.")
 
     def save_data(self):
@@ -190,14 +190,14 @@ class RichPresenceApp:
         if self.running:
             self.stop_rich_presence()
 
-        
+        # Supprimer le fichier de données
         try:
             os.remove('rich_presence_data.json')
         except FileNotFoundError:
             pass
 
     def is_data_saved(self):
-        
+        # Vérifie si des données sont enregistrées dans le fichier JSON
         try:
             with open('rich_presence_data.json', 'r') as file:
                 data = json.load(file)
